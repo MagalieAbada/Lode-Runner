@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Lode Runner Magalie Abada</title>
+    <link rel="stylesheet" type="text/css" href="" />
+
+    <!-- Code JavaScript - Pages -->
+    <script type="text/javascript" src="board.js"></script>
+    <script type="text/javascript" src="eventKeyboard.js"></script>
+    <script type="text/javascript" src="hole.js"></script>
+    <script type="text/javascript" src="gold.js"></script>
+    <script type="text/javascript" src="lodeRunner.js"></script>
+    <script type="text/javascript" src="levelManager.js"></script>
+    <script type="text/javascript" src="soundManager.js"></script>
+    <script type="text/javascript" src="guards.js"></script>
+
+    <!-- Code JavaScript local -->
+    <script type="text/javascript"> 
+
+        /* ----- Variables -----*/
+        let objCanvas = null;
+        let objC2D = null;
+        let objCycleAnimation = null;
+
+
+        /* ----- Fonctions -----*/
+
+        function initAnimation() {
+            objCanvas = document.getElementById('monCanvas');
+            objCanvas.focus();
+            objC2D = objCanvas.getContext('2d');
+
+            // Initialisation du niveau
+            initNiveau();
+
+            dessiner();
+            animer();  
+        }
+
+        function dessiner() {
+            dessinerFond();
+            dessinerGrille();
+            dessinerLodeRunner();
+            dessinertableauDeBord();
+            dessinerGardes();
+
+            if (etatJeu === ETAT_GAME_OVER) {
+                dessinerGameOver();
+            }
+
+            if (etatJeu === ETAT_TERMINE) {
+                dessinerVictoire();
+            }
+        }
+
+        function effacerDessin() {
+        	objC2D.clearRect(0,0, objCanvas.width, objCanvas.height); 
+        }
+
+        function animer() {
+            objCycleAnimation = requestAnimationFrame(animer);
+            effacerDessin();
+            mettreAjourAnimation();
+            dessiner();
+        }
+
+        function mettreAjourAnimation() {
+            updateLevelManager();
+
+            if (etatJeu === ETAT_GAME_OVER) return;
+
+            updateLodeRunner();
+
+            if (etatJeu === ETAT_EN_COURS) {
+                updateTrous();
+                updateGardes();
+            }
+        }
+    </script>
+</head>
+
+<body onload="initAnimation()"> 
+	<canvas id="monCanvas" width="896" height="594" tabindex="1" 
+            onkeydown="gestionClavier(event); return false" 
+            onkeyup="gestionRelache(event)">
+		Votre navigateur ne supporte pas la balise canvas
+	</canvas>
+</body>
+
+
+</html>
